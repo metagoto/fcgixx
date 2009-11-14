@@ -1,0 +1,101 @@
+C++ FastCGI Protocol Driver
+===========================
+
+Synopsis
+---------
+
+ The `FastCGI Protocol Driver <http://cryp.to/libfastcgi/>`_ is a C++
+ class library that manages all communication between a web server and a
+ FastCGI user application. The code is highly portable and documented
+ pretty well in the paper `FastCGI -- The Forgotten Treasure
+ <http://cryp.to/publications/fastcgi/>`_. The most current version is
+ available for download at libfastcgi-HEAD.tar.gz_ and the source code
+ can also be browsed on-line at the `git repository
+ <http://git.cryp.to/fastcgi/>`_.
+
+Example Programs
+----------------
+
+Compilation
+'''''''''''
+
+ Check the settings in "Makefile", adapt them to your system, and run
+ "make". The result will be two examples program that are going to be
+ called ``test.fcgi'' and ``echo.fcgi``.
+
+Installation with Apache 1.3.34, mod_fastcgi 2.4.2
+'''''''''''''''''''''''''''''''''''''''''''''''''''
+
+ Install the ``test.fcgi`` and ``echo.fcgi`` programs to
+ ``<ServerRoot>/fcgi-bin/``. Then modify ``httpd.conf`` to load
+ mod_fastcgi::
+
+  LoadModule fastcgi_module libexec/mod_fastcgi.so
+  AddModule mod_fastcgi.c
+
+ Enable access to FastCGI in Apache::
+
+  Alias /fcgi-bin/ "/usr/local/apache/fcgi-bin/"
+
+  <Directory "/usr/local/apache/fcgi-bin/>
+    SetHandler fastcgi-script
+  </Directory>
+
+  FastCGIServer fcgi-bin/test.fcgi
+
+ Go to http://localhost/fcgi-bin/test.fcgi and watch Apache's access
+ log. If nothing shows up there, try the error log.
+
+Install with lighttpd 1.4.16
+'''''''''''''''''''''''''''''
+
+ Install the ``test.fcgi`` and ``echo.fcgi`` programs to
+ ``<ServerRoot>/fcgi-bin/``. Then modify ``lighttpd.conf`` to spawn the
+ processes on demand::
+
+  fastcgi.server = ( "test.fcgi" =>
+    ( "localhost" =>
+      ( "socket" => "/var/run/lighttpd-test-fastcgi.socket"
+      , "bin-path" => "<ServerRoot>/fcgi-bin/test.fcgi"
+      , "check-local" => "disable"
+      , "min-procs" => 1
+      , "max-procs" => 3
+      )
+    ),
+    "echo.fcgi" =>
+    ( "localhost" =>
+      ( "socket" => "/var/run/lighttpd-echo-fastcgi.socket"
+      , "bin-path" => "<ServerRoot>/fcgi-bin/echo.fcgi"
+      , "check-local" => "disable"
+      , "min-procs" => 1
+      , "max-procs" => 3
+      )
+    )
+  )
+
+ Go to http://localhost/test.fcgi and watch lighttpd's access log. If
+ nothing shows up there, try the error log.
+
+Copyleft
+--------
+
+ Copyright (c) 2001-2008 by Peter Simons <simons@cryp.to>.
+
+ The FastCGI Protocol Driver is provided 'as-is', without any express or
+ implied warranty. In no event will the authors be held liable for any
+ damages arising from the use of this software.
+
+ Copying and distribution of this software, with or without
+ modification, are permitted in any medium without royalty provided the
+ copyright notice and this notice are preserved.
+
+-----------------------------------------------------------------
+
+`[Homepage] <http://cryp.to/>`_
+
+.. References used in the text above
+.. .................................
+
+.. _libfastcgi-HEAD.tar.gz: http://git.cryp.to/?p=libfastcgi;a=snapshot;h=HEAD
+
+.. _git repository:

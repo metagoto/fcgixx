@@ -1,0 +1,14 @@
+lib/
+src/*.o
+
+.sconsign.dblite
+
+
+libfcgixx.a
+
+fcgixx.config
+fcgixx.creator
+fcgixx.files
+fcgixx.includes
+fcgixx.creator.user
+
