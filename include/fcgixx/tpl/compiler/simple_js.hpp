@@ -7,12 +7,12 @@
 #include <boost/algorithm/string/replace.hpp>
 
 
-namespace runpac { namespace fcgixx { namespace detail {
+namespace runpac { namespace fcgixx { namespace tpl { namespace compiler {
 
 
-struct js_template_compiler
+struct simple_js
 {
-    js_template_compiler()
+    simple_js()
     { }
 
     void raw(char const* s, char const* e)
@@ -95,5 +95,5 @@ struct js_template_compiler
 };
 
 
-} } } // ns
+} } } } // ns
 

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "conversion.hpp"
+#include <fcgixx/conv/json_v8.hpp>
 #include <mongo/client/dbclient.h>
 
 
-namespace runpac { namespace fcgixx { namespace cast {
+namespace runpac { namespace fcgixx { namespace conv {
 
 template<>
 inline v8::Handle<v8::Value> to<mongo::BSONElement>(const mongo::BSONElement& elem)

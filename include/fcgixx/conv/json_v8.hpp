@@ -3,15 +3,15 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <v8.h>
 #include <boost/variant/static_visitor.hpp>
-#include "json_type.hpp"
+#include <v8.h>
+#include <fcgixx/json_type.hpp>
 
 
-namespace runpac { namespace fcgixx { namespace cast {
+namespace runpac { namespace fcgixx { namespace conv {
 
 
-// JS -> NATIVE
+// V8 -> NATIVE
 template<typename T>
 inline T to(const v8::Handle<v8::Value>& val)
 {
@@ -49,7 +49,7 @@ inline bool to<bool>(const v8::Handle<v8::Value>& val)
 }
 
 
-// NATIVE -> JS
+// NATIVE -> V8
 
 template<typename F>
 inline v8::Handle<v8::Value> to(const F& val)
@@ -159,7 +159,7 @@ inline v8::Handle<v8::Value> to<json_object>(const json_object& val)
 }
 
 
-/// JS ACCESSOR HELPERS
+/// V8 ACCESSOR HELPERS
 
 template<typename T>
 inline T get_to(const v8::Handle<v8::Value>& val, const char* name)

@@ -7,19 +7,19 @@
 #include <boost/spirit/include/classic_core.hpp>
 #include <boost/spirit/include/classic_confix.hpp>
 
-#include "detail/js_template_grammar.hpp"
-#include "detail/js_template_compiler.hpp"
-#include "../conversion.hpp"
+#include <fcgixx/tpl/grammar/simple_js.hpp>
+#include <fcgixx/tpl/compiler/simple_js.hpp>
+#include <fcgixx/conv/json_v8.hpp>
 
 
-namespace runpac { namespace fcgixx {
+namespace runpac { namespace fcgixx { namespace tpl { namespace engine {
 
 
 template<typename Comp>
-struct v8_engine
+struct simple_v8
 {
 
-    typedef v8_engine self_type;
+    typedef simple_v8 self_type;
 
     typedef v8::Persistent<v8::Script> compiled_type;
 
@@ -27,12 +27,12 @@ struct v8_engine
     typedef boost::unordered_map<std::string, modifier_f> modifiers_type;
 
 
-    v8_engine()
+    simple_v8()
     {
         clear_context();
     }
 
-    ~v8_engine()
+    ~simple_v8()
     {
         if (!js_context.IsEmpty()) {
             js_context.Dispose();
@@ -70,7 +70,7 @@ struct v8_engine
         v8::HandleScope scope;
         v8::Context::Scope context_scope(js_context);
 
-        js_context->Global()->ForceSet(v8::String::New(name), cast::to(value));
+        js_context->Global()->ForceSet(v8::String::New(name), conv::to(value));
     }
 
     void assign(const char* name, const char* value)
@@ -78,7 +78,7 @@ struct v8_engine
         v8::HandleScope scope;
         v8::Context::Scope context_scope(js_context);
 
-        js_context->Global()->ForceSet(v8::String::New(name), cast::to(value));
+        js_context->Global()->ForceSet(v8::String::New(name), conv::to(value));
     }
 
     std::string render(const compiled_type& script)
@@ -93,23 +93,39 @@ struct v8_engine
 
     compiled_type compile(const std::string& source_str)
     {
-        using namespace runpac::fcgixx::detail;
+        using namespace runpac::fcgixx::tpl;
 
-        js_template_compiler tpl_compiler;
+        compiler::simple_js tpl_compiler;
 
-        js_template_grammar::action_f raw_f      (bind(&js_template_compiler::raw,  &tpl_compiler, _1,_2));
-        js_template_grammar::action_f directive_f(bind(&js_template_compiler::directive, &tpl_compiler, _1,_2));
-        js_template_grammar::action_f echo_f     (bind(&js_template_compiler::echo, &tpl_compiler, _1,_2));
-        js_template_grammar::action_f close_f    (bind(&js_template_compiler::close,&tpl_compiler, _1,_2));
-        js_template_grammar::action_f statement_start_f(bind(&js_template_compiler::statement_start,&tpl_compiler, _1,_2));
-        js_template_grammar::action_f else_f     (bind(&js_template_compiler::else_,&tpl_compiler, _1,_2));
-        js_template_grammar::action_f raw_escape_mode_f(bind(&js_template_compiler::raw_escape_mode,&tpl_compiler, _1,_2));
-        js_template_grammar::action_f default_modifier_f(bind(&js_template_compiler::default_modifier,&tpl_compiler, _1,_2));
+        grammar::simple_js::action_f raw_f
+            (bind(&compiler::simple_js::raw, &tpl_compiler, _1,_2));
 
-        js_template_grammar parser(raw_f, directive_f, echo_f, close_f
+        grammar::simple_js::action_f directive_f
+            (bind(&compiler::simple_js::directive, &tpl_compiler, _1,_2));
+
+        grammar::simple_js::action_f echo_f
+            (bind(&compiler::simple_js::echo, &tpl_compiler, _1,_2));
+
+        grammar::simple_js::action_f close_f
+            (bind(&compiler::simple_js::close, &tpl_compiler, _1,_2));
+
+        grammar::simple_js::action_f statement_start_f
+            (bind(&compiler::simple_js::statement_start, &tpl_compiler, _1,_2));
+
+        grammar::simple_js::action_f else_f
+            (bind(&compiler::simple_js::else_, &tpl_compiler, _1,_2));
+
+        grammar::simple_js::action_f raw_escape_mode_f
+            (bind(&compiler::simple_js::raw_escape_mode, &tpl_compiler, _1,_2));
+
+        grammar::simple_js::action_f default_modifier_f
+            (bind(&compiler::simple_js::default_modifier, &tpl_compiler, _1,_2));
+
+        grammar::simple_js parser(raw_f, directive_f, echo_f, close_f
                                   ,statement_start_f, else_f, raw_escape_mode_f, default_modifier_f);
 
         std::string tpl_js_source;
+
         boost::spirit::classic::parse_info<> info =
             boost::spirit::classic::parse(source_str.c_str(), parser);
 
@@ -140,7 +156,7 @@ struct v8_engine
         self_type* self = self_ptr_from(args);
         v8::Context::Scope context_scope(self->js_context);
 
-        self->buf.append(cast::to<std::string>(args[0]));
+        self->buf.append(conv::to<std::string>(args[0]));
         return v8::Undefined();
     }
 
@@ -155,11 +171,11 @@ struct v8_engine
         self_type* self = self_ptr_from(args);
         v8::Context::Scope context_scope(self->js_context);
 
-        std::string str(cast::to<std::string>(args[0]));
+        std::string str(conv::to<std::string>(args[0]));
         if (args[1]->IsArray()) {
             v8::Handle<v8::Array> arr = v8::Handle<v8::Array>::Cast(args[1]);
             for (unsigned int i = 0; i < arr->Length(); ++i) {
-                std::string key(cast::to<std::string>(arr->Get(v8::Integer::New(i))));
+                std::string key(conv::to<std::string>(arr->Get(v8::Integer::New(i))));
                 modifiers_type::const_iterator it = self->modifiers.find(key);
                 if (it != self->modifiers.end()) {
                     str = it->second(str.begin(), str.end());
@@ -201,6 +217,6 @@ private:
 };
 
 
-} } // ns
+} } } } // ns
 
 

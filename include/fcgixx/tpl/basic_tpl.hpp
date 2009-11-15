@@ -1,10 +1,11 @@
 #pragma once
 
+#include <string>
 #include <boost/noncopyable.hpp>
-#include "templater/stub_cache.hpp"
+//#include "templater/stub_cache.hpp"
 
 
-namespace runpac { namespace fcgixx {
+namespace runpac { namespace fcgixx { namespace tpl {
 
 
 struct compiler_t { }; // todo move spirit stuff outside tpl engine
@@ -14,7 +15,7 @@ template< typename Loader
         , typename Engine
         , typename Cache // = stub_cache
         >
-struct templater : public Loader
+struct basic_tpl : public Loader
                  , public Engine
                  , public Cache
                  , private boost::noncopyable
@@ -24,14 +25,14 @@ struct templater : public Loader
     typedef Engine engine;
     typedef Cache  cache;
 
-    templater()
+    basic_tpl()
         : loader()
         , engine()
         , cache()
     {
     }
 
-    ~templater()
+    ~basic_tpl()
     {
     }
 
@@ -50,6 +51,6 @@ struct templater : public Loader
 };
 
 
-} } // ns
+} } } // ns
 
 

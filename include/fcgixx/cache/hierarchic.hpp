@@ -8,12 +8,13 @@
 #include <boost/weak_ptr.hpp>
 #include <boost/unordered_map.hpp>
 #include <boost/noncopyable.hpp>
-#include "tree.hh"
+#include <fcgixx/detail/tree.hh>
 
-namespace runpac { namespace fcgixx {
+namespace runpac { namespace fcgixx { namespace cache {
 
-template<typename Key = std::string, typename Value = std::string>
-struct cache : boost::noncopyable
+template<typename Key = std::string
+        ,typename Value = std::string>
+struct hierarchic : boost::noncopyable
 {
     struct cache_node;
 
@@ -27,6 +28,7 @@ struct cache : boost::noncopyable
     typedef boost::unordered_map<key_type, weak_node> table_type;
 
     typedef typename tree_type::iterator iterator;
+
 
     struct cache_node : boost::noncopyable
     {
@@ -59,6 +61,7 @@ struct cache : boost::noncopyable
         table[key] = weak_node(p);
     }
 
+
     void add(iterator& parent, const key_type& key, const value_type& value)
     {
         typename table_type::const_iterator it = table.find(key);
@@ -70,6 +73,7 @@ struct cache : boost::noncopyable
         table[key] = weak_node(p);
     }
 
+
     void add(const key_type& parent, const key_type& key, const value_type& value)
     {
         iterator itp = location(parent);
@@ -77,6 +81,7 @@ struct cache : boost::noncopyable
             add(itp, key, value);
         }
     }
+
 
     iterator location(const key_type& key) const
     {
@@ -88,6 +93,7 @@ struct cache : boost::noncopyable
         }
         return itr;
     }
+
 
     bool valid(const iterator& it) const
     {
@@ -103,6 +109,7 @@ struct cache : boost::noncopyable
         }
     }
 
+
     value_type get(const key_type& key) const
     {
         typename table_type::const_iterator it = table.find(key);
@@ -113,15 +120,18 @@ struct cache : boost::noncopyable
         return value_type();
     }
 
+
     bool has(const key_type& key) const
     {
         return table.find(key) != table.end();
     }
 
+
     void clear()
     {
         nodes.clear();
     }
+
 
     //////
     std::string check()
@@ -143,6 +153,7 @@ struct cache : boost::noncopyable
     }
     /////
 
+
 private:
     void quick_del(const typename table_type::const_iterator& it)
     {
@@ -155,7 +166,7 @@ private:
         nodes.erase(itr);
     }
 
-private:
+
     table_type table;
     tree_type nodes;
 
@@ -163,6 +174,6 @@ private:
 };
 
 
-} } // ns
+} } } // ns
 
 

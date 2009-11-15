@@ -4,10 +4,10 @@
 #include <boost/unordered_map.hpp>
 
 
-namespace runpac { namespace fcgixx {
+namespace runpac { namespace fcgixx { namespace tpl { namespace cache {
 
 template<typename Engine>
-struct stub_cache
+struct stub
 {
     typedef typename Engine::compiled_type compiled_type;
 
@@ -39,6 +39,6 @@ private:
 };
 
 
-} } // ns
+} } } } // ns
 
 

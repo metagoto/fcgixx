@@ -1,28 +1,23 @@
 #pragma once
 
 #include <string>
-
-#include "../../fastcgi.hpp"
-
-#include <v8.h>
-
-#include "../conversion.hpp"
-
 #include <iostream>
 
+#include <fcgixx/conv/json_v8.hpp>
 
-namespace runpac { namespace fcgixx { namespace policy {
 
-template <typename Host, typename Request>
-class js_router
+namespace runpac { namespace fcgixx { namespace router {
+
+template<typename Host, typename Request>
+class js
 {
-    typedef js_router<Host, Request> self_type;
+    typedef js<Host, Request> self_type;
 
     typedef Request request_type;
 
 public:
 
-    js_router()
+    js()
     {
         v8::HandleScope scope;
 
@@ -36,7 +31,7 @@ public:
     }
 
 
-    ~js_router()
+    ~js()
     {
         js_script.Dispose();
         js_context.Dispose();
@@ -86,14 +81,14 @@ public:
 
         Local<Object> obj = args[0]->ToObject();
 
-        const string route_name = cast::get_to<string>(args[0], "route", "error");
+        const string route_name = conv::get_to<string>(args[0], "route", "error");
         self->request_p->params().insert(make_pair("route", route_name));
 
         Local<Array> params_array = Local<Array>::Cast(obj->Get(String::New("params")));
         for (uint32_t i = 0; i < params_array->Length(); ++i) {
             Local<Value> param = params_array->Get(Integer::New(i));
-            const string name = cast::get_to<string>(param, "name");
-            const string value = cast::get_to<string>(param, "value");
+            const string name = conv::get_to<string>(param, "name");
+            const string value = conv::get_to<string>(param, "value");
             if (name.length() && value.length()) {
                 self->request_p->params().insert(make_pair(name, value));
             }
@@ -105,7 +100,7 @@ public:
   // tmp_log
   static v8::Handle<v8::Value> tmp_log(const v8::Arguments& args)
   {
-      const std::string log_msg = cast::to<std::string>(args[0]);
+      const std::string log_msg = conv::to<std::string>(args[0]);
       std::cout << "js_router: " << log_msg << std::endl;
       return v8::Undefined();
   }

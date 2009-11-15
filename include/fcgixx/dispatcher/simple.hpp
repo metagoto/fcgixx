@@ -7,26 +7,26 @@
 #include <boost/bind.hpp>
 
 
-namespace runpac { namespace fcgixx { namespace policy {
+namespace runpac { namespace fcgixx { namespace dispatcher {
 
 template <typename Host>
-class simple_dispatcher
+class simple
 {
 
 public:
-    typedef simple_dispatcher<Host> self_type;
+    typedef simple<Host> self_type;
 
     typedef boost::function<bool ()> callback_t;
 
     typedef boost::unordered_map<std::string, callback_t> routes_def_t;
 
-    simple_dispatcher()
+    simple()
     {
 
     }
 
 
-    ~simple_dispatcher()
+    ~simple()
     {
 
     }

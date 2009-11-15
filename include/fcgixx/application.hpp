@@ -6,8 +6,7 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 
-#include "http_request.hpp"
-#include "http_response.hpp"
+#include <fcgixx/http_response.hpp>
 
 
 namespace runpac { namespace fcgixx {

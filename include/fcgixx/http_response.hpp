@@ -6,8 +6,8 @@
 
 #include <boost/unordered_map.hpp>
 
-#include "header.hpp"
-#include "cookie.hpp"
+#include <fcgixx/header.hpp>
+#include <fcgixx/cookie.hpp>
 
 
 namespace runpac { namespace fcgixx {

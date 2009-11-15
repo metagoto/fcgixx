@@ -2,7 +2,7 @@ lib/
 src/*.o
 
 .sconsign.dblite
-
+.DS_Store
 
 libfcgixx.a
 

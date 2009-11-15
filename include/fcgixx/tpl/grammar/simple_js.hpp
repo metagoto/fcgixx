@@ -9,15 +9,15 @@
 
 
 
-namespace runpac { namespace fcgixx { namespace detail {
+namespace runpac { namespace fcgixx { namespace tpl { namespace grammar {
 
 
-struct js_template_grammar : public boost::spirit::classic::grammar<js_template_grammar>
+struct simple_js : public boost::spirit::classic::grammar<simple_js>
 {
 
     typedef boost::function<void (const char *, const char *)> action_f;
 
-    js_template_grammar(
+    simple_js(
          action_f& raw_action
         ,action_f& directive_action
         ,action_f& echo_action
@@ -41,7 +41,7 @@ struct js_template_grammar : public boost::spirit::classic::grammar<js_template_
 
     template <typename ScannerT> struct definition
     {
-        definition(js_template_grammar const& self)
+        definition(simple_js const& self)
         {
             using namespace boost::spirit::classic;
 
@@ -110,5 +110,5 @@ struct js_template_grammar : public boost::spirit::classic::grammar<js_template_
 };
 
 
-} } }// ns
+} } } } // ns
 

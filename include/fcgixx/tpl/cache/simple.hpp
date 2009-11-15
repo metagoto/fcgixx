@@ -4,10 +4,11 @@
 #include <boost/unordered_map.hpp>
 
 
-namespace runpac { namespace fcgixx {
+namespace runpac { namespace fcgixx { namespace tpl { namespace cache {
 
-template<typename Compiled_Type, void (*F)(Compiled_Type&)>
-struct simple_cache
+template<typename Compiled_Type
+        ,void (*F)(Compiled_Type&)>
+struct simple
 {
     typedef Compiled_Type compiled_type;
 
@@ -16,7 +17,7 @@ struct simple_cache
     typedef typename container_type::const_iterator const_iterator;
 
 
-    ~simple_cache()
+    ~simple()
     {
         clear();
     }
@@ -25,7 +26,6 @@ struct simple_cache
     {
         for (typename container_type::iterator i(container.begin()), e(container.end()); i != e; ++i) {
             (*F)(i->second);
-            //std::cout << "CLEAR2: " << i->first << std::endl;
         }
         container.clear();
     }
@@ -50,6 +50,6 @@ private:
 };
 
 
-} } // ns
+} } } } // ns
 
 

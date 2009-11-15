@@ -1,7 +1,6 @@
 #pragma once
 
 #include <fastcgi.hpp>
-//#include <boost/noncopyable.hpp>
 
 namespace runpac { namespace fcgixx {
 
