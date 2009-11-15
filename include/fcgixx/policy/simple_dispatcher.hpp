@@ -55,7 +55,6 @@ public:
             routes_def_t::const_iterator itr = routes_def.find(route);
             if (itr != routes_def.end()) {
                 return itr->second();
-                //return true;
             }
             return false;
         }
@@ -76,7 +75,6 @@ public:
         routes_def_t::const_iterator itr = routes_def.find(fatal_route);
         if (itr != routes_def.end()) {
             return itr->second();
-            //return true;
         }
         return false;
     }

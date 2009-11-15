@@ -12,9 +12,8 @@ namespace runpac { namespace fcgixx {
 struct http_cookie_parser
 {
 
-    typedef boost::unordered_map<std::string, std::string> params_type;
-
-    static void parse(const std::string& input, params_type& params)
+    template<typename T>
+    static void parse(const std::string& input, T& params)
     {
         typedef boost::tokenizer<boost::char_separator<char> > toker;
 

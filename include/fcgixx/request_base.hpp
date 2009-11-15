@@ -25,7 +25,7 @@ struct request_base
 
 
     void init(raw_type raw_request)
-    {\
+    {
         raw = raw_request;
     }
 

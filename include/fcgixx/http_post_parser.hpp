@@ -11,8 +11,8 @@ namespace runpac { namespace fcgixx {
 struct http_post_parser
 {
 
-    static void parse(const std::string& input
-                     ,boost::unordered_map<std::string, std::string>& params)
+    template<typename T>
+    static void parse(const std::string& input, T& params)
     {
         typedef boost::tokenizer<boost::char_separator<char> > toker;
 

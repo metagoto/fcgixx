@@ -2,26 +2,26 @@
 
 fastcgi c++ library and framework
 
-libfcgixx.a is built on top of http://cryp.to/libfastcgi/
+libfcgixx is built on top of a slightly modded http://cryp.to/libfastcgi/
 
 Framework files require gcc 4.5 with c++0x support including lambda functions
 
 
 **Dependencies**
 
-libfcgixx.a
+libfcgixx :
 
-*   Standard c++ compiler
+*   Boost - http://boost.org
 
-Framework
+Framework :
 
 *   Boost - http://boost.org
 *   Google v8 - http://code.google.com/p/v8/
-*   c++0x
+*   GCC 4.5
 
 
 **Installation**
   
-    $ scons
+    $ scons --boost-dir=/path
 
 Files are under lib/ and include/
