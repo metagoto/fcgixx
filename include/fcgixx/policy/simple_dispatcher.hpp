@@ -43,41 +43,47 @@ public:
         routes_def.insert(std::make_pair(route, callback));
     }
 
+    void set_fatal(char const* route)
+    {
+        fatal_route = route;
+    }
+
 
     bool dispatch(std::string const& route)
     {
         try {
             routes_def_t::const_iterator itr = routes_def.find(route);
             if (itr != routes_def.end()) {
-                itr->second();
-                return true;
+                return itr->second();
+                //return true;
             }
             return false;
         }
         catch(const std::exception& e)  {
-            std::cout << "bool dispatch(std::string const& route) : exception: " << e.what() << std::endl;
-
-            routes_def_t::const_iterator itr = routes_def.find("__500__");
-            if (itr != routes_def.end()) {
-                itr->second();
-                return true;
-            }
-            return false;
+            std::cout << "dispatcher exception: " << e.what() << std::endl;
+            return fallback();
         }
         catch(...) {
-            std::cout << "bool dispatch(std::string const& route) : unknown exception" << std::endl;
-
-            routes_def_t::const_iterator itr = routes_def.find("__500__");
-            if (itr != routes_def.end()) {
-                itr->second();
-                return true;
-            }
-            return false;
+            std::cout << "dispatcher unknown exception" << std::endl;
+            return fallback();
         }
     }
 
+    bool fallback()
+    {
+        if (fatal_route.empty()) return false;
+
+        routes_def_t::const_iterator itr = routes_def.find(fatal_route);
+        if (itr != routes_def.end()) {
+            return itr->second();
+            //return true;
+        }
+        return false;
+    }
 
     routes_def_t routes_def;
+    std::string fatal_route;
+
 
 };
 

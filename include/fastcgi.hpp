@@ -20,6 +20,8 @@
 #include <stdexcept>
 #include <stdint.h>
 
+#include <boost/unordered_map.hpp>
+
 // Forward declarations.
 
 class FCGIProtocolDriver;
@@ -68,7 +70,8 @@ public:
   bool const keep_connection;
   bool aborted;
 
-  std::map<std::string,std::string> params;
+  //std::map<std::string,std::string> params;
+  boost::unordered_map<std::string,std::string> params;
   std::string stdin_stream, data_stream;
   bool stdin_eof, data_eof;
 

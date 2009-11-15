@@ -258,7 +258,7 @@ struct web_app
 
     int run()
     {
-        try {
+        /*try {*/
 
             // Set a limit on the number of open files.
             rlimit rlim;
@@ -274,9 +274,8 @@ struct web_app
             Listener< ConnectionHandler<RequestHandler<T>, T>, T> listener(sched, app);
             while(!sched.empty()) {
                 sched.schedule();
-                //sched.dump(std::cerr);
             }
-        }
+        /*}
         catch(const std::exception &e) {
             std::cerr << "exception: " << e.what() << std::endl;
             throw;
@@ -284,7 +283,7 @@ struct web_app
         catch(...) {
             std::cerr << "unknown exception." << std::endl;
             throw;
-        }
+        }*/
         return 0;
     }
 

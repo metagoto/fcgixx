@@ -6,21 +6,24 @@
 #include <boost/noncopyable.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "request.hpp"
+#include "request_base.hpp"
 #include "http_post_parser.hpp"
+#include "http_cookie_parser.hpp"
 
 namespace runpac { namespace fcgixx {
 
 
-struct http_request : boost::noncopyable
+struct http_request : public request_base
+                    , private boost::noncopyable
 {
-    //friend class application;
 
-    typedef boost::unordered_map<std::string, std::string> params_type;
+    typedef request_base::raw_type raw_request;
+    typedef request_base::params_type params_type;
 
-    http_request(FCGIRequest* fcgi_request = 0)
-    : fcgi_request(fcgi_request)
-    , post_params_parsed(false)
+
+    http_request()
+    : post_params_parsed(false)
+    , cookie_params_parsed(false)
     {
     }
 
@@ -30,38 +33,30 @@ struct http_request : boost::noncopyable
     }
 
 
-    void reset(FCGIRequest* request)
+    void init(request_base::raw_type raw_request)
     {
-        fcgi_request = request;
+        request_base::init(raw_request);
         post_params.clear();
+        cookie_params.clear();
         post_params_parsed = false;
+        cookie_params_parsed = false;
     }
 
 
     template<typename T = std::string>
     T get_param(const char* name, const T& def = T())
     {
-        if (!fcgi_request) return def;
-
-        typename request::params_type::const_iterator it = fcgi_request->params.find(name);
-        if (it != fcgi_request->params.end()) {
+        params_type::const_iterator it = params().find(name);
+        if (it != params().end()) {
             return boost::lexical_cast<T>(it->second);
         }
         return def;
     }
 
-    /*template<typename T = std::string>
-    T get_param(const char* name)
-    {
-        return get_param(name, T());
-    }*/
-
 
     template<typename T = std::string>
     T get_post_param(const char* name, const T& def = T())
     {
-        if (!fcgi_request) return def;
-
         parse_post_params();
 
         params_type::const_iterator it = post_params.find(name);
@@ -71,16 +66,23 @@ struct http_request : boost::noncopyable
         return def;
     }
 
-    /*template<typename T = std::string>
-    T get_post_param(const char* name)
+
+    template<typename T = std::string>
+    T get_cookie(const char* name, const T& def = T())
     {
-        return get_post_param(name, T());
-    }*/
+        parse_cookie_params();
+
+        params_type::const_iterator it = cookie_params.find(name);
+        if (it != cookie_params.end()) {
+            return boost::lexical_cast<T>(it->second);
+        }
+        return def;
+    }
 
 
-    const std::map<std::string, std::string>& get_params() //TODO: make it a std::unordered_map
+    const params_type& get_params()
     {
-        return fcgi_request->params;
+        return params();
     }
 
 
@@ -90,11 +92,12 @@ struct http_request : boost::noncopyable
         return post_params;
     }
 
-
-    FCGIRequest* get_raw_request()
+    const params_type& get_cookie_params()
     {
-        return fcgi_request;
+        parse_cookie_params();
+        return cookie_params;
     }
+
 
 
 private:
@@ -102,15 +105,25 @@ private:
     void parse_post_params()
     {
         if (!post_params_parsed) {
-            http_post_parser::parse_http_params(fcgi_request->stdin_stream, post_params);
+            http_post_parser::parse(stdin(), post_params);
             post_params_parsed = true;
         }
     }
 
+    void parse_cookie_params()
+    {
+        if (!cookie_params_parsed) {
+            http_cookie_parser::parse(get_param("HTTP_COOKIE"), cookie_params);
+            cookie_params_parsed = true;
+        }
+    }
 
-    FCGIRequest* fcgi_request; // utiliser fcgixx::request
+
     params_type post_params;
     bool post_params_parsed;
+
+    params_type cookie_params;
+    bool cookie_params_parsed;
 
 };
 

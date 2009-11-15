@@ -2,10 +2,12 @@
 
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 #include <boost/unordered_map.hpp>
 
 #include "header.hpp"
+#include "cookie.hpp"
 
 
 namespace runpac { namespace fcgixx {
@@ -15,7 +17,7 @@ struct http_response
 {
 
     http_response()
-    : buf("")
+    : buf()
     , os(&buf)
     {
     }
@@ -23,12 +25,18 @@ struct http_response
     void clear()
     {
         clear_headers();
+        clear_cookies();
         clear_body();
     }
 
     void clear_headers()
     {
         headers.clear();
+    }
+
+    void clear_cookies()
+    {
+        cookies.clear();
     }
 
     void clear_body()
@@ -40,9 +48,11 @@ struct http_response
     std::string formated_headers()
     {
         std::string buf;
-        headers_t::const_iterator it = headers.begin();
-        for ( ; it != headers.end(); ++it) {
-            buf += it->first + ": " + it->second + "\r\n";
+        for (headers_t::const_iterator i(headers.begin()), e(headers.end()); i != e; ++i) {
+            buf += i->first + ": " + i->second + "\r\n";
+        }
+        for (cookies_t::const_iterator i(cookies.begin()), e(cookies.end()); i != e; ++i) {
+            buf += "Set-cookie: " + *i + "\r\n";
         }
         return buf + "\r\n";
     }
@@ -51,7 +61,9 @@ struct http_response
     std::ostream os;
 
     typedef boost::unordered_map<std::string, std::string> headers_t;
+    typedef std::vector<std::string> cookies_t;
     headers_t headers;
+    cookies_t cookies;
 
 };
 
@@ -69,6 +81,11 @@ inline http_response& operator<< (http_response& res, const header& head)
     return res;
 }
 
+inline http_response& operator<< (http_response& res, const cookie& cookie)
+{
+    res.cookies.push_back(cookie.to_string());
+    return res;
+}
 
 
 } } // ns

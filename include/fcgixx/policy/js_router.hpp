@@ -13,10 +13,12 @@
 
 namespace runpac { namespace fcgixx { namespace policy {
 
-template <typename Host>
+template <typename Host, typename Request>
 class js_router
 {
-    typedef js_router<Host> self_type;
+    typedef js_router<Host, Request> self_type;
+
+    typedef Request request_type;
 
 public:
 
@@ -41,19 +43,16 @@ public:
     }
 
 
-    void route(FCGIRequest* request, const std::string& path_info)
+    void route(request_type& request, const std::string& path_info)
     {
-        this->request = request;
-
         v8::HandleScope scope;
         v8::Context::Scope context_scope(js_context);
 
-        //std::cout << "test from js_router2" << std::endl;
-
         js_context->Global()->Set(v8::String::New("REQUEST_METHOD")
-                                 ,v8::String::New(request->params["REQUEST_METHOD"].c_str()));
+                                 ,v8::String::New(request.params()["REQUEST_METHOD"].c_str()));
         js_context->Global()->Set(v8::String::New("PATH_INFO"), v8::String::New(path_info.c_str()));
 
+        request_p = &request;
         js_script->Run();
     }
 
@@ -88,7 +87,7 @@ public:
         Local<Object> obj = args[0]->ToObject();
 
         const string route_name = cast::get_to<string>(args[0], "route", "error");
-        self->request->params.insert(make_pair("route", route_name));
+        self->request_p->params().insert(make_pair("route", route_name));
 
         Local<Array> params_array = Local<Array>::Cast(obj->Get(String::New("params")));
         for (uint32_t i = 0; i < params_array->Length(); ++i) {
@@ -96,7 +95,7 @@ public:
             const string name = cast::get_to<string>(param, "name");
             const string value = cast::get_to<string>(param, "value");
             if (name.length() && value.length()) {
-                self->request->params.insert(make_pair(name, value));
+                self->request_p->params().insert(make_pair(name, value));
             }
         }
 
@@ -115,7 +114,8 @@ private:
 
     v8::Persistent<v8::Context> js_context;
     v8::Persistent<v8::Script> js_script;
-    FCGIRequest* request;
+
+    request_type* request_p;
 
 };
 

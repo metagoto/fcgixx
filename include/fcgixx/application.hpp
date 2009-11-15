@@ -13,14 +13,18 @@
 namespace runpac { namespace fcgixx {
 
 template< typename T
-        , template <typename> class Router
+        , typename Request
+        , template <typename, typename> class Router
         , template <typename> class Dispatcher
         >
-struct application : public Router<T>
+struct application : public Router<T, Request>
                    , public Dispatcher<T>
 {
 
-    typedef Router<T>     router;
+
+    typedef Request request_type;
+    typedef typename request_type::params_type params_type;
+    typedef Router<T, Request> router;
     typedef Dispatcher<T> dispatcher;
 
     application()
@@ -33,52 +37,45 @@ struct application : public Router<T>
     }
 
 
-    void process(FCGIRequest* fcgi_request)
+    void process(typename request_type::raw_type raw_request)
     {
-        request.reset(fcgi_request);
+        request.init(raw_request);
 
         response.clear();
 
         route();
 
         if (!dispatch()) { // temp!
-            fcgi_request->write("Content-type: text/html\r\n\r\nunmatched");
+            request.write("Content-type: text/html\r\n\r\nunmatched");
         }
-        fcgi_request->end_request(0, FCGIRequest::REQUEST_COMPLETE);
+        request.end();
     }
-
 
     void route()
     {
-        FCGIRequest* fcgi_request = request.get_raw_request();
-
-        params_t::const_iterator it = fcgi_request->params.find("SCRIPT_NAME");
-        if (it != fcgi_request->params.end()) {
-            router::route(fcgi_request, it->second);
+        typename request_type::params_type::const_iterator it = request.params().find("SCRIPT_NAME");
+        if (it != request.params().end()) {
+            router::route(request, it->second);
         }
     }
 
 
     bool dispatch()
     {
-        FCGIRequest* fcgi_request = request.get_raw_request();
-
-        params_t::const_iterator it = fcgi_request->params.find("route");
-        if (it != fcgi_request->params.end()) {
+       typename request_type::params_type::const_iterator it = request.params().find("route");
+        if (it != request.params().end()) {
             if (dispatcher::dispatch(it->second)) {
-                fcgi_request->write(response.formated_headers()); // inclu le "\r\n"
-                fcgi_request->write(response.buf.str().c_str(), response.buf.str().size());
+                request.write(response.formated_headers().c_str()); // inclu "\r\n"
+                request.write(response.buf.str().c_str(), response.buf.str().size());
                 return true;
             }
         }
         return false; //else //??
     }
 
-    http_request request;
+    request_type request;
 
     http_response response;
-
-    typedef std::map<std::string, std::string> params_t;
 
 
 };
