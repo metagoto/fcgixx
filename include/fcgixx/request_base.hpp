@@ -14,6 +14,7 @@ struct request_base
 
 
     request_base()
+        : raw(0)
     {
     }
 
@@ -31,6 +32,7 @@ struct request_base
 
     params_type& params()
     {
+        // assert stuff!
         return raw->params;
     }
 

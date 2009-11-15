@@ -52,7 +52,7 @@ public:
     }
 
 
-    void set_js_source(const std::string& js_source)
+    void set_source(const std::string& js_source)
     {
         v8::HandleScope scope;
         v8::Context::Scope context_scope(js_context);

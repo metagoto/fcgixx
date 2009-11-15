@@ -20,15 +20,14 @@ public:
 
     typedef boost::unordered_map<std::string, callback_t> routes_def_t;
 
+
     simple()
     {
-
     }
 
 
     ~simple()
     {
-
     }
 
 

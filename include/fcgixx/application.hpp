@@ -1,11 +1,8 @@
 #pragma once
 
 #include <string>
-#include <map>
-
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
-
 #include <fcgixx/http_response.hpp>
 
 
@@ -13,6 +10,7 @@ namespace runpac { namespace fcgixx {
 
 template< typename T
         , typename Request
+        , typename Response
         , template <typename, typename> class Router
         , template <typename> class Dispatcher
         >
@@ -22,6 +20,7 @@ struct application : public Router<T, Request>
 
 
     typedef Request request_type;
+    typedef Response response_type;
     typedef typename request_type::params_type params_type;
     typedef Router<T, Request> router;
     typedef Dispatcher<T> dispatcher;
@@ -52,7 +51,7 @@ struct application : public Router<T, Request>
 
     void route()
     {
-        typename request_type::params_type::const_iterator it = request.params().find("SCRIPT_NAME");
+        typename params_type::const_iterator it = request.params().find("SCRIPT_NAME");
         if (it != request.params().end()) {
             router::route(request, it->second);
         }
@@ -61,10 +60,10 @@ struct application : public Router<T, Request>
 
     bool dispatch()
     {
-       typename request_type::params_type::const_iterator it = request.params().find("route");
+       typename params_type::const_iterator it = request.params().find("route"); // tmp
         if (it != request.params().end()) {
             if (dispatcher::dispatch(it->second)) {
-                request.write(response.formated_headers().c_str()); // inclu "\r\n"
+                request.write(response.formated_headers()); //.c_str());
                 request.write(response.buf.str().c_str(), response.buf.str().size());
                 return true;
             }
@@ -74,8 +73,8 @@ struct application : public Router<T, Request>
 
     request_type request;
 
-    http_response response;
-
+    //http_response response;
+    response_type response;
 
 };
 

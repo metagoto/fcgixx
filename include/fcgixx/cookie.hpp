@@ -4,7 +4,7 @@
 
 namespace runpac { namespace fcgixx {
 
-#define RP_FCGIXX_PAST_DATE "Wednesday, 09-Nov-1999 23:12:40 GMT"
+static const char* past_date = "Wednesday, 09-Nov-1999 23:12:40 GMT";
 
 struct cookie
 {
@@ -19,7 +19,7 @@ struct cookie
     cookie(const char* name)
         : name(name)
         , value()
-        , expires(RP_FCGIXX_PAST_DATE)
+        , expires(past_date)
     {
     }
 
