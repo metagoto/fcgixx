@@ -5,12 +5,17 @@
 
 namespace runpac { namespace fcgixx { namespace session { namespace storage {
 
-
+template<typename Id>
 struct memory
 {
 
+    typedef Id id_type;
+
     struct node
     {
+
+        typedef const char* const key_type;
+        typedef std::string mapped_type;
 
         template<typename T = std::string>
         T get(const char* name, const T& def = T()) const
@@ -26,63 +31,64 @@ struct memory
         template<typename T = std::string>
         void set(const char* name, const T& value)
         {
-            params[name] = value;
+            params.insert(std::make_pair(name, boost::lexical_cast<mapped_type>(value)));
         }
 
 
-        typedef boost::unordered_map<std::string, std::string> params_type;
+        typedef boost::unordered_map<key_type, mapped_type> params_type;
         params_type params;
 
     };
 
 
-    void add(const std::string& id)
+    void add(const id_type& id)
     {
         if (nodes.find(id) == nodes.end()) {
-            nodes[id] = node();
+            nodes.insert(std::make_pair(id, node()));
         }
     }
 
-    void ensure(const std::string& id)
+    void ensure(const id_type& id)
     {
         if (nodes.find(id) == nodes.end()) {
-            nodes[id] = node();
+            nodes.insert(std::make_pair(id, node()));
         }
     }
 
-    template<typename T = std::string, typename U = std::string>
-    U get(const T& id, const char* name, const U& def = T())
+    template<typename T = std::string>
+    T get(const id_type& id, const char* name, const T& def = T())
     {
-        nodes_type::const_iterator i = nodes.find(id);
+        typename nodes_type::const_iterator i = nodes.find(id);
         if (i != nodes.end()) {
-            return i->second.get<U>(name, def);
+            return i->second.get<T>(name, def);
         }
         return def;
     }
 
-    template<typename T = std::string, typename U = std::string>
-    void set(const T& id, const char* name, const U& value)
+    template<typename T = std::string>
+    void set(const id_type& id, const char* name, const T& value)
     {
-        nodes_type::iterator i = nodes.find(id);
+        typename nodes_type::iterator i = nodes.find(id);
         if (i != nodes.end()) {
             i->second.set(name, value);
         }
     }
 
-    ///
+    /// tmp
     std::string check()
     {
         std::string s;
-        for (nodes_type::const_iterator i(nodes.begin()), e(nodes.end()); i!=e; ++i) {
+        for (typename nodes_type::const_iterator i(nodes.begin()), e(nodes.end()); i!=e; ++i) {
             s += i->first + " - ";
         }
         return s + "\n";
     }
     ///
 
-    typedef boost::unordered_map<std::string, node> nodes_type;
+    typedef boost::unordered_map<id_type, node> nodes_type;
     nodes_type nodes;
 
 };
+
 
 } } } } //ns

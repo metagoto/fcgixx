@@ -19,12 +19,14 @@ using mem_cook =
 template<typename Request, typename Response>
 struct mem_cook
 {
+
+
+
     typedef basic_session<
                 identifier::cookie<Request, Response>
                ,storage::memory
             > type;
 };
-
 
 
 } } } // ns

@@ -1,19 +1,19 @@
 #pragma once
 
-#include <string> // tmp. need proper parametric stuff
+#include <string>
 
 namespace runpac { namespace fcgixx { namespace session {
 
-
 template< typename Identifier
-        , typename Storage
+        , template<typename> class Storage
         >
 struct basic_session : public Identifier
-                     , public Storage
+                     , public Storage<typename Identifier::id_type>
 {
 
     typedef Identifier identifier;
-    typedef Storage storage;
+    typedef typename Identifier::id_type id_type;
+    typedef Storage<id_type> storage;
 
 
     basic_session(typename identifier::request_type& request
@@ -22,15 +22,15 @@ struct basic_session : public Identifier
     {
     }
 
-    void start()
+
+    void start() // tmp
     {
-        std::string id;
+        id_type id;
         if (identifier::has_id(id)) {
             storage::ensure(id);
         }
         else {
-            id = identifier::new_id();
-            storage::add(id);
+            storage::add(identifier::new_id());
         }
     }
 
@@ -38,7 +38,7 @@ struct basic_session : public Identifier
     template<typename T = std::string>
     T get(const char* name, const T& def = T())
     {
-        std::string id;
+        id_type id;
         if (identifier::has_id(id)) {
             return storage::template get<T>(id, name, def);
         }
@@ -49,7 +49,7 @@ struct basic_session : public Identifier
     template<typename T = std::string>
     void set(const char* name, const T& value)
     {
-        std::string id;
+        id_type id;
         if (identifier::has_id(id)) {
             storage::set(id, name, value);
         }
