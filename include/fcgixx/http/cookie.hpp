@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace runpac { namespace fcgixx {
+namespace runpac { namespace fcgixx { namespace http {
 
 static const char* past_date = "Wednesday, 09-Nov-1999 23:12:40 GMT";
 
@@ -44,5 +44,5 @@ struct cookie
 
 
 
-} } //ns
+} } } //ns
 

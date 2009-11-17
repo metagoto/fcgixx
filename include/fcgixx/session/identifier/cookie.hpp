@@ -1,7 +1,7 @@
 #pragma once
 
 #include <boost/lexical_cast.hpp>
-#include <fcgixx/cookie.hpp>
+#include <fcgixx/http/cookie.hpp>
 
 
 namespace runpac { namespace fcgixx { namespace session { namespace identifier {
@@ -43,7 +43,7 @@ struct cookie
     {
         const std::string& new_uuid =
             boost::lexical_cast<std::string>(time(0)); /// tmp!! need proper uuid
-        response << fcgixx::cookie(ident, new_uuid.c_str());
+        response << http::cookie(ident, new_uuid.c_str());
         return boost::lexical_cast<id_type>(new_uuid);
     }
 

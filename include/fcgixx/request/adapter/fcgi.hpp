@@ -1,30 +1,29 @@
 #pragma once
 
 #include <fastcgi.hpp>
+#include <boost/noncopyable.hpp>
 
-namespace runpac { namespace fcgixx {
+
+namespace runpac { namespace fcgixx { namespace request { namespace adapter {
 
 
-struct request_base
+struct fcgi : boost::noncopyable
 {
 
     typedef FCGIRequest* raw_type;
 
+    typedef std::string stream_type;
+
     typedef boost::unordered_map<std::string, std::string> params_type;
 
 
-    request_base()
+    fcgi()
         : raw(0)
     {
     }
 
 
-    ~request_base()
-    {
-    }
-
-
-    void init(raw_type raw_request)
+    void process(raw_type raw_request)
     {
         raw = raw_request;
     }
@@ -37,13 +36,13 @@ struct request_base
     }
 
 
-    std::string& stdin()
+    stream_type& stdin()
     {
         return raw->stdin_stream;
     }
 
 
-    void write(const std::string& buf)
+    void write(const stream_type& buf)
     {
         raw->write(buf);
     }
@@ -68,5 +67,4 @@ private:
 };
 
 
-} } // ns
-
+} } } } // ns

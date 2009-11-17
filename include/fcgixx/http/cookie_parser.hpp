@@ -6,10 +6,10 @@
 #include <boost/algorithm/string.hpp>
 
 
-namespace runpac { namespace fcgixx {
+namespace runpac { namespace fcgixx { namespace http {
 
 
-struct http_cookie_parser
+struct cookie_parser
 {
 
     template<typename T>
@@ -35,4 +35,4 @@ struct http_cookie_parser
 
 };
 
-} } // ns
+} } } // ns

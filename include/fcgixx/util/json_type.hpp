@@ -7,7 +7,7 @@
 #include <boost/unordered_map.hpp>
 
 
-namespace runpac { namespace fcgixx {
+namespace runpac { namespace fcgixx { namespace util {
 
 
 typedef boost::make_recursive_variant
@@ -22,5 +22,5 @@ typedef boost::unordered_map<std::string, json_type> json_object;
 typedef std::vector<json_type> json_array;
 
 
-} } // ns
+} } } // ns
 

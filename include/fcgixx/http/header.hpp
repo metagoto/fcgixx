@@ -3,7 +3,7 @@
 #include <string>
 
 
-namespace runpac { namespace fcgixx {
+namespace runpac { namespace fcgixx { namespace http {
 
 struct header
 {
@@ -17,6 +17,6 @@ struct header
 };
 
 
-} } // ns
+} } } // ns
 
 

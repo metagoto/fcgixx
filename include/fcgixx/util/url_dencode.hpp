@@ -4,7 +4,7 @@
 #include <boost/tokenizer.hpp>
 
 
-namespace runpac { namespace fcgixx {
+namespace runpac { namespace fcgixx { namespace util {
 
 
 //TODO: credit original contributor
@@ -61,4 +61,4 @@ inline std::string url_decode( const std::string& str )
 }
 
 
-} } // ns
+} } } // ns

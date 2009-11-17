@@ -6,11 +6,11 @@
 
 #include <boost/unordered_map.hpp>
 
-#include <fcgixx/header.hpp>
-#include <fcgixx/cookie.hpp>
+#include <fcgixx/http/header.hpp>
+#include <fcgixx/http/cookie.hpp>
 
 
-namespace runpac { namespace fcgixx {
+namespace runpac { namespace fcgixx { namespace response {
 
 
 struct http_response
@@ -75,18 +75,18 @@ inline http_response& operator<< (http_response& res, const T& data)
     return res;
 }
 
-inline http_response& operator<< (http_response& res, const header& head)
+inline http_response& operator<< (http_response& res, const http::header& head)
 {
     res.headers[head.name] = head.value;
     return res;
 }
 
-inline http_response& operator<< (http_response& res, const cookie& cookie)
+inline http_response& operator<< (http_response& res, const http::cookie& cookie)
 {
     res.cookies.push_back(cookie.to_string());
     return res;
 }
 
 
-} } // ns
+} } } // ns
 

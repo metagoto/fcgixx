@@ -12,12 +12,12 @@
 namespace runpac { namespace fcgixx { namespace tpl { namespace grammar {
 
 
-struct simple_js : public boost::spirit::classic::grammar<simple_js>
+struct js_simple : public boost::spirit::classic::grammar<js_simple>
 {
 
     typedef boost::function<void (const char *, const char *)> action_f;
 
-    simple_js(
+    js_simple(
          action_f& raw_action
         ,action_f& directive_action
         ,action_f& echo_action
@@ -41,7 +41,7 @@ struct simple_js : public boost::spirit::classic::grammar<simple_js>
 
     template <typename ScannerT> struct definition
     {
-        definition(simple_js const& self)
+        definition(js_simple const& self)
         {
             using namespace boost::spirit::classic;
 

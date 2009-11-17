@@ -3,7 +3,7 @@
 #include <string>
 #include <fstream>
 
-namespace runpac { namespace fcgixx {
+namespace runpac { namespace fcgixx { namespace util {
 
 struct file_loader
 {
@@ -30,6 +30,6 @@ struct file_loader
 };
 
 
-} } // ns
+} } } // ns
 
 

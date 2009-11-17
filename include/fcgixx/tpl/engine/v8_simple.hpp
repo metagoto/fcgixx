@@ -7,8 +7,8 @@
 #include <boost/spirit/include/classic_core.hpp>
 #include <boost/spirit/include/classic_confix.hpp>
 
-#include <fcgixx/tpl/grammar/simple_js.hpp>
-#include <fcgixx/tpl/compiler/simple_js.hpp>
+#include <fcgixx/tpl/grammar/js_simple.hpp>
+#include <fcgixx/tpl/compiler/js_simple.hpp>
 #include <fcgixx/conv/json_v8.hpp>
 
 
@@ -16,10 +16,10 @@ namespace runpac { namespace fcgixx { namespace tpl { namespace engine {
 
 
 template<typename Comp>
-struct simple_v8
+struct v8_simple
 {
 
-    typedef simple_v8 self_type;
+    typedef v8_simple self_type;
 
     typedef v8::Persistent<v8::Script> compiled_type;
 
@@ -27,12 +27,12 @@ struct simple_v8
     typedef boost::unordered_map<std::string, modifier_f> modifiers_type;
 
 
-    simple_v8()
+    v8_simple()
     {
         clear_context();
     }
 
-    ~simple_v8()
+    ~v8_simple()
     {
         if (!js_context.IsEmpty()) {
             js_context.Dispose();
@@ -95,33 +95,33 @@ struct simple_v8
     {
         using namespace runpac::fcgixx::tpl;
 
-        compiler::simple_js tpl_compiler;
+        compiler::js_simple tpl_compiler;
 
-        grammar::simple_js::action_f raw_f
-            (bind(&compiler::simple_js::raw, &tpl_compiler, _1,_2));
+        grammar::js_simple::action_f raw_f
+            (bind(&compiler::js_simple::raw, &tpl_compiler, _1,_2));
 
-        grammar::simple_js::action_f directive_f
-            (bind(&compiler::simple_js::directive, &tpl_compiler, _1,_2));
+        grammar::js_simple::action_f directive_f
+            (bind(&compiler::js_simple::directive, &tpl_compiler, _1,_2));
 
-        grammar::simple_js::action_f echo_f
-            (bind(&compiler::simple_js::echo, &tpl_compiler, _1,_2));
+        grammar::js_simple::action_f echo_f
+            (bind(&compiler::js_simple::echo, &tpl_compiler, _1,_2));
 
-        grammar::simple_js::action_f close_f
-            (bind(&compiler::simple_js::close, &tpl_compiler, _1,_2));
+        grammar::js_simple::action_f close_f
+            (bind(&compiler::js_simple::close, &tpl_compiler, _1,_2));
 
-        grammar::simple_js::action_f statement_start_f
-            (bind(&compiler::simple_js::statement_start, &tpl_compiler, _1,_2));
+        grammar::js_simple::action_f statement_start_f
+            (bind(&compiler::js_simple::statement_start, &tpl_compiler, _1,_2));
 
-        grammar::simple_js::action_f else_f
-            (bind(&compiler::simple_js::else_, &tpl_compiler, _1,_2));
+        grammar::js_simple::action_f else_f
+            (bind(&compiler::js_simple::else_, &tpl_compiler, _1,_2));
 
-        grammar::simple_js::action_f raw_escape_mode_f
-            (bind(&compiler::simple_js::raw_escape_mode, &tpl_compiler, _1,_2));
+        grammar::js_simple::action_f raw_escape_mode_f
+            (bind(&compiler::js_simple::raw_escape_mode, &tpl_compiler, _1,_2));
 
-        grammar::simple_js::action_f default_modifier_f
-            (bind(&compiler::simple_js::default_modifier, &tpl_compiler, _1,_2));
+        grammar::js_simple::action_f default_modifier_f
+            (bind(&compiler::js_simple::default_modifier, &tpl_compiler, _1,_2));
 
-        grammar::simple_js parser(raw_f, directive_f, echo_f, close_f
+        grammar::js_simple parser(raw_f, directive_f, echo_f, close_f
                                   ,statement_start_f, else_f, raw_escape_mode_f, default_modifier_f);
 
         std::string tpl_js_source;

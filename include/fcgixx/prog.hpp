@@ -253,7 +253,7 @@ private:
 
 
 template<typename T>
-struct web_app
+struct prog
 {
 
     int run()

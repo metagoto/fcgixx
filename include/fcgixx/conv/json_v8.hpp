@@ -5,7 +5,7 @@
 #include <vector>
 #include <boost/variant/static_visitor.hpp>
 #include <v8.h>
-#include <fcgixx/json_type.hpp>
+#include <fcgixx/util/json_type.hpp>
 
 
 namespace runpac { namespace fcgixx { namespace conv {
@@ -106,7 +106,7 @@ struct json_type_converter_visitor : public boost::static_visitor<v8::Handle<v8:
 };
 
 template<>
-inline v8::Handle<v8::Value> to<json_type>(const json_type& val)
+inline v8::Handle<v8::Value> to<util::json_type>(const util::json_type& val)
 {
     return boost::apply_visitor(json_type_converter_visitor(), val);
 }
@@ -136,10 +136,10 @@ inline v8::Handle<v8::Value> to(const std::map<std::string, T>& val)
 
 
 template<>
-inline v8::Handle<v8::Value> to<json_array>(const json_array& val)
+inline v8::Handle<v8::Value> to<util::json_array>(const util::json_array& val)
 {
     v8::Local<v8::Array> arr = v8::Array::New(val.size());
-    json_array::const_iterator i(val.begin()), e(val.end());
+    util::json_array::const_iterator i(val.begin()), e(val.end());
     for (int k = 0; i != e; ++i) {
         arr->Set(v8::Integer::New(k++), to(*i));
     }
@@ -148,11 +148,11 @@ inline v8::Handle<v8::Value> to<json_array>(const json_array& val)
 
 
 template<>
-inline v8::Handle<v8::Value> to<json_object>(const json_object& val)
+inline v8::Handle<v8::Value> to<util::json_object>(const util::json_object& val)
 {
     v8::Local<v8::Object> obj = v8::Object::New();
-    json_object::const_iterator i = val.begin();
-    for (json_object::const_iterator i(val.begin()), e(val.end()); i != e; ++i) {
+    util::json_object::const_iterator i = val.begin();
+    for (util::json_object::const_iterator i(val.begin()), e(val.end()); i != e; ++i) {
         obj->ForceSet(v8::String::New(i->first.c_str()), to(i->second));
     }
     return obj;

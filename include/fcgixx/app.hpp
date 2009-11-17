@@ -1,9 +1,10 @@
 #pragma once
 
-#include <string>
+//#include <string>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
-#include <fcgixx/http_response.hpp>
+#include <boost/noncopyable.hpp>
+//#include <fcgixx/http_response.hpp>
 
 
 namespace runpac { namespace fcgixx {
@@ -14,8 +15,9 @@ template< typename T
         , template <typename, typename> class Router
         , template <typename> class Dispatcher
         >
-struct application : public Router<T, Request>
-                   , public Dispatcher<T>
+struct app : public Router<T, Request>
+           , public Dispatcher<T>
+           , boost::noncopyable
 {
 
 
@@ -25,20 +27,10 @@ struct application : public Router<T, Request>
     typedef Router<T, Request> router;
     typedef Dispatcher<T> dispatcher;
 
-    application()
-    {
-    }
-
-
-    virtual ~application()
-    {
-    }
-
 
     void process(typename request_type::raw_type raw_request)
     {
-        request.init(raw_request);
-
+        request.process(raw_request);
         response.clear();
 
         route();
@@ -73,7 +65,6 @@ struct application : public Router<T, Request>
 
     request_type request;
 
-    //http_response response;
     response_type response;
 
 };

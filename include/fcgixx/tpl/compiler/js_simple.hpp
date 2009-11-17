@@ -10,9 +10,9 @@
 namespace runpac { namespace fcgixx { namespace tpl { namespace compiler {
 
 
-struct simple_js
+struct js_simple
 {
-    simple_js()
+    js_simple()
     { }
 
     void raw(char const* s, char const* e)
