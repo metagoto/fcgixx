@@ -1,10 +1,8 @@
 #pragma once
 
-//#include <string>
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 #include <boost/noncopyable.hpp>
-//#include <fcgixx/http_response.hpp>
 
 
 namespace runpac { namespace fcgixx {
@@ -32,12 +30,11 @@ struct app : public Router<T, Request>
     {
         request.process(raw_request);
         response.clear();
-
         route();
-
-        if (!dispatch()) { // temp!
-            request.write("Content-type: text/html\r\n\r\nunmatched");
-        }
+        dispatch();
+        //if (!dispatch()) { // temp!
+        //    request.write("Content-type: text/html\r\n\r\nunmatched");
+        //}
         request.end();
     }
 

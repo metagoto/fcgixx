@@ -1,22 +1,18 @@
 #pragma once
 
-#include <iostream>
-#include <sstream>
-#include <vector>
 
+#include <string>
 #include <boost/unordered_map.hpp>
-
 #include <fcgixx/http/header.hpp>
 #include <fcgixx/http/cookie.hpp>
 
+namespace runpac { namespace fcgixx { namespace response { namespace handler {
 
-namespace runpac { namespace fcgixx { namespace response {
 
-
-struct http_response
+struct simple
 {
 
-    http_response()
+    simple()
     : buf()
     , os(&buf)
     {
@@ -69,24 +65,23 @@ struct http_response
 
 
 template<typename T>
-inline http_response& operator<< (http_response& res, const T& data)
+inline simple& operator<< (simple& res, const T& data)
 {
     res.os << data;
     return res;
 }
 
-inline http_response& operator<< (http_response& res, const http::header& head)
+inline simple& operator<< (simple& res, const http::header& head)
 {
     res.headers[head.name] = head.value;
     return res;
 }
 
-inline http_response& operator<< (http_response& res, const http::cookie& cookie)
+inline simple& operator<< (simple& res, const http::cookie& cookie)
 {
     res.cookies.push_back(cookie.to_string());
     return res;
 }
 
 
-} } } // ns
-
+} } } } // ns
