@@ -34,6 +34,15 @@ struct basic_session : public Identifier
         }
     }
 
+    void remove()
+    {
+        id_type id;
+        if (identifier::has_id(id)) {
+            identifier::delete_id(id);
+            storage::remove(id);
+        }
+    }
+
 
     template<typename T = std::string>
     T get(const char* name, const T& def = T())
@@ -52,6 +61,15 @@ struct basic_session : public Identifier
         id_type id;
         if (identifier::has_id(id)) {
             storage::set(id, name, value);
+        }
+    }
+
+
+    void del(const char* name)
+    {
+        id_type id;
+        if (identifier::has_id(id)) {
+            storage::del(id, name);
         }
     }
 

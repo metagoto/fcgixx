@@ -37,6 +37,12 @@ public:
         routes_def.insert(std::make_pair(route, boost::bind(callback, static_cast<Host*>(this))));
     }
 
+    template<typename T, typename U>
+    void bind(char const* route, T const& callback, U const& ins)
+    {
+        routes_def.insert(std::make_pair(route, boost::bind(callback, ins)));
+    }
+
     void bind(char const* route, callback_t const& callback)
     {
         routes_def.insert(std::make_pair(route, callback));

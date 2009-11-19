@@ -35,6 +35,12 @@ struct memory
         }
 
 
+        void del(const char* name)
+        {
+            params.erase(params.find(name));
+        }
+
+
         typedef boost::unordered_map<key_type, mapped_type> params_type;
         params_type params;
 
@@ -55,6 +61,12 @@ struct memory
         }
     }
 
+    void remove(const id_type& id)
+    {
+        nodes.erase(nodes.find(id));
+    }
+
+
     template<typename T = std::string>
     T get(const id_type& id, const char* name, const T& def = T())
     {
@@ -73,6 +85,16 @@ struct memory
             i->second.set(name, value);
         }
     }
+
+    template<typename T = std::string>
+    void del(const id_type& id, const char* name)
+    {
+        typename nodes_type::iterator i = nodes.find(id);
+        if (i != nodes.end()) {
+            i->second.del(name);
+        }
+    }
+
 
     /// tmp
     std::string check()

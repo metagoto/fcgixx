@@ -33,7 +33,7 @@ struct dummy
     }
 
 
-private:    \
+private:
     callback_t fun;
 
 

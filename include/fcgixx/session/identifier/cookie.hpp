@@ -47,6 +47,11 @@ struct cookie
         return boost::lexical_cast<id_type>(new_uuid);
     }
 
+    void delete_id(const id_type& id)
+    {
+        response << http::cookie(ident);
+    }
+
 
 private:
     request_type& request;
