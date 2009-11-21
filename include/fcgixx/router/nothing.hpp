@@ -11,7 +11,7 @@ struct nothing
 
     void route(request_type& request, const std::string& path_info)
     {
-        request.params()["route"] = path_info;
+        //request.params()["route"] = path_info;
     }
 
 };

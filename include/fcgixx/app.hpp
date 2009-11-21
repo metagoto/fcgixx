@@ -31,10 +31,7 @@ struct app : public Router<T, Request>
         request.process(raw_request);
         response.clear();
         route();
-        dispatch();
-        //if (!dispatch()) { // temp!
-        //    request.write("Content-type: text/html\r\n\r\nunmatched");
-        //}
+        dispatch(); // bool
         request.end();
     }
 
@@ -44,12 +41,13 @@ struct app : public Router<T, Request>
         if (it != request.params().end()) {
             router::route(request, it->second);
         }
+        // router::route(request, "it->second");
     }
 
 
     bool dispatch()
     {
-       typename params_type::const_iterator it = request.params().find("route"); // tmp
+        typename params_type::const_iterator it = request.params().find("route"); // tmp
         if (it != request.params().end()) {
             if (dispatcher::dispatch(it->second)) {
                 request.write(response.formated_headers()); //.c_str());
@@ -57,6 +55,12 @@ struct app : public Router<T, Request>
                 return true;
             }
         }
+        /*if (dispatcher::dispatch("dum")) {
+            request.write(response.formated_headers()); //.c_str());
+            //request.write(response.buf.str().c_str(), response.buf.str().size());
+            request.write(response.buf.str());
+            return true;
+        }*/
         return false; //else //??
     }
 

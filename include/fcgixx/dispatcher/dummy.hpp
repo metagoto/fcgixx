@@ -11,6 +11,36 @@ template <typename Host>
 struct dummy
 {
 
+    typedef bool (Host::*callback_t)();
+
+
+    dummy() : fun(0)
+    { }
+
+
+    void bind(callback_t const& callback)
+    {
+        fun = callback;
+    }
+
+
+    bool dispatch(std::string const& route)
+    {
+        if (fun) return (static_cast<Host*>(this)->*fun)();
+        return false;
+    }
+
+
+private:
+    callback_t fun;
+
+};
+
+/*
+template <typename Host>
+struct dummy
+{
+
     typedef boost::function<bool ()> callback_t;
 
 
@@ -38,7 +68,7 @@ private:
 
 
 };
-
+*/
 
 } } } // ns
 
