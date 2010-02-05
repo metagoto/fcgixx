@@ -4,6 +4,10 @@
 #include <fcgixx/session/identifier/cookie.hpp>
 #include <fcgixx/session/storage/memory.hpp>
 
+//#include <boost/uuid/uuid.hpp>
+#include <fcgixx/session/uuid/standard_generator.hpp>
+#include <fcgixx/session/uuid/standard_converter.hpp>
+
 
 namespace runpac { namespace fcgixx { namespace session {
 
@@ -21,7 +25,7 @@ struct mem_cook
 {
 
     typedef basic_session<
-                identifier::cookie<Request, Response>
+            identifier::cookie<Request, Response, boost::uuids::uuid>
                ,storage::memory
             > type;
 };

@@ -62,8 +62,8 @@ public:
     }
 
 
-  static v8::Handle<v8::Value> set_route_cb(const v8::Arguments& args)
-  {
+    static v8::Handle<v8::Value> set_route_cb(const v8::Arguments& args)
+    {
         using namespace std;
         using namespace v8;
 
@@ -95,15 +95,15 @@ public:
         }
 
         return Undefined();
-  }
+    }
 
-  // tmp_log
-  static v8::Handle<v8::Value> tmp_log(const v8::Arguments& args)
-  {
-      const std::string log_msg = conv::to<std::string>(args[0]);
-      std::cout << "js_router: " << log_msg << std::endl;
-      return v8::Undefined();
-  }
+    // tmp_log
+    static v8::Handle<v8::Value> tmp_log(const v8::Arguments& args)
+    {
+        const std::string log_msg = conv::to<std::string>(args[0]);
+        std::cout << "js_router: " << log_msg << std::endl;
+        return v8::Undefined();
+    }
 
 private:
 

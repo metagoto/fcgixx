@@ -1,17 +1,21 @@
 #pragma once
 
-#include <boost/lexical_cast.hpp>
+
 #include <fcgixx/http/cookie.hpp>
+#include <fcgixx/session/uuid/generator.hpp>
+#include <fcgixx/session/uuid/converter.hpp>
 
 
 namespace runpac { namespace fcgixx { namespace session { namespace identifier {
 
 
-static const char* ident = "uuid"; // tmp
+static const char* ident = "uuid";
+
+
 
 template<typename Request
         ,typename Response
-        ,typename Id = std::string>
+        ,typename Id>
 struct cookie
 {
 
@@ -30,9 +34,11 @@ struct cookie
 
     bool has_id(id_type& id)
     {
+        using fcgixx::session::uuid::to_uuid;
+
         const std::string& uuid = request.get_cookie(ident);
         if (!uuid.empty()) {
-            id = boost::lexical_cast<id_type>(uuid);
+            id = to_uuid<id_type, std::string>(uuid);
             return true;
         }
         return false;
@@ -41,10 +47,13 @@ struct cookie
 
     id_type new_id()
     {
-        const std::string& new_uuid =
-            boost::lexical_cast<std::string>(time(0)); /// tmp!! need proper uuid
-        response << http::cookie(ident, new_uuid.c_str());
-        return boost::lexical_cast<id_type>(new_uuid);
+        using fcgixx::session::uuid::from_uuid;
+
+        const id_type& id = id_generator();
+        const std::string& id_str =
+            from_uuid<id_type, std::string>(id);
+        response << http::cookie(ident, id_str.c_str());
+        return id;
     }
 
     void delete_id(const id_type& id)
@@ -57,8 +66,11 @@ private:
     request_type& request;
     response_type& response;
 
+    fcgixx::session::uuid::generator<id_type> id_generator;
+
 
 };
+
 
 
 } } } } //ns

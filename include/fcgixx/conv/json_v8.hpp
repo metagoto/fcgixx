@@ -151,7 +151,7 @@ template<>
 inline v8::Handle<v8::Value> to<util::json_object>(const util::json_object& val)
 {
     v8::Local<v8::Object> obj = v8::Object::New();
-    util::json_object::const_iterator i = val.begin();
+    //util::json_object::const_iterator i = val.begin();
     for (util::json_object::const_iterator i(val.begin()), e(val.end()); i != e; ++i) {
         obj->ForceSet(v8::String::New(i->first.c_str()), to(i->second));
     }
