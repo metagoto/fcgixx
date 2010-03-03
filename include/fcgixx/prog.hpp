@@ -233,13 +233,18 @@ public: RequestHandler(App& app) : app(app) { }
 private:
     virtual void operator()(FCGIRequest* req)
     {
+
+        if (req->aborted) {
+            req->write("Aborted", 7, FCGIRequest::STDERR);
+            req->end_request(1, FCGIRequest::UNKNOWN_ROLE);
+            std::cout << "Request aborted aborted\n";
+            return;
+        }
+
         if (!req->stdin_eof)
             return;
 
-        // Make sure we are a responder.
-
-        if (req->role != FCGIRequest::RESPONDER)
-        {
+        if (req->role != FCGIRequest::RESPONDER) {
             req->write("We can't handle any role but RESPONDER.", 39, FCGIRequest::STDERR);
             req->end_request(1, FCGIRequest::UNKNOWN_ROLE);
             return;

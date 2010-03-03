@@ -25,7 +25,7 @@ struct mem_cook
 {
 
     typedef basic_session<
-            identifier::cookie<Request, Response, boost::uuids::uuid>
+                identifier::cookie<Request, Response, boost::uuids::uuid>
                ,storage::memory
             > type;
 };
