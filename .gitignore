@@ -6,9 +6,3 @@ src/*.o
 
 libfcgixx.a
 
-fcgixx.config
-fcgixx.creator
-fcgixx.files
-fcgixx.includes
-fcgixx.creator.user
-
