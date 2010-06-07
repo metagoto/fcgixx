@@ -4,14 +4,10 @@ C++ FastCGI Protocol Driver
 Synopsis
 ---------
 
- The `FastCGI Protocol Driver <http://cryp.to/libfastcgi/>`_ is a C++
- class library that manages all communication between a web server and a
- FastCGI user application. The code is highly portable and documented
- pretty well in the paper `FastCGI -- The Forgotten Treasure
- <http://cryp.to/publications/fastcgi/>`_. The most current version is
- available for download at libfastcgi-HEAD.tar.gz_ and the source code
- can also be browsed on-line at the `git repository
- <http://git.cryp.to/fastcgi/>`_.
+ The FastCGI Protocol Driver is a C++ class library that manages all
+ communication between a web server and a FastCGI user application. The
+ code is highly portable and should compile fine with any moderately
+ modern ISO C++ compiler.
 
 Example Programs
 ----------------
@@ -79,23 +75,17 @@ Install with lighttpd 1.4.16
 Copyleft
 --------
 
- Copyright (c) 2001-2008 by Peter Simons <simons@cryp.to>.
+ Copyright (c) 2001-2010 by Peter Simons <simons@cryp.to>.
 
- The FastCGI Protocol Driver is provided 'as-is', without any express or
- implied warranty. In no event will the authors be held liable for any
- damages arising from the use of this software.
+ This program is free software: you can redistribute it and/or modify it
+ under the terms of the GNU Lesser General Public License as published by the
+ Free Software Foundation, either version 3 of the License, or (at your
+ option) any later version.
 
- Copying and distribution of this software, with or without
- modification, are permitted in any medium without royalty provided the
- copyright notice and this notice are preserved.
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License
+ for more details.
 
------------------------------------------------------------------
-
-`[Homepage] <http://cryp.to/>`_
-
-.. References used in the text above
-.. .................................
-
-.. _libfastcgi-HEAD.tar.gz: http://git.cryp.to/?p=libfastcgi;a=snapshot;h=HEAD
-
-.. _git repository:
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program. If not, see <http://www.gnu.org/licenses/>.
